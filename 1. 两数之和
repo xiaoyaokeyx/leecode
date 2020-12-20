@@ -1,0 +1,49 @@
+/**
+ * Note: The returned array must be malloced, assume caller calls free().
+ */
+typedef struct val
+{
+    int index;
+    int value;
+} val;
+
+int compare(const void *a, const void *b);
+
+int *twoSum(int *nums, int numsSize, int target, int *returnSize)
+{
+    val *map = (int *)malloc(sizeof(val) * numsSize);
+    for (int i = 0; i < numsSize; i++)
+    {
+        map[i].index = i;
+        map[i].value = nums[i];
+    }
+
+    qsort(map, numsSize, sizeof(val), compare);
+    int start = 0;
+    int end = numsSize - 1;
+    *returnSize = 2;
+    int *ans = (int *)malloc(sizeof(int) * 2);
+    while (start != end)
+    {
+        if (map[start].value + map[end].value > target)
+        {
+            end--;
+        }
+        else if (map[start].value + map[end].value < target)
+        {
+            start++;
+        }
+        else
+        {
+            ans[0] = map[start].index;
+            ans[1] = map[end].index;
+            break;
+        }
+    }
+    return ans;
+}
+
+int compare(const void *a, const void *b)
+{
+    return (*(val *)a).value - (*(val *)b).value;
+}
